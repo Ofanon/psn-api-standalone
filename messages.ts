@@ -2,7 +2,7 @@
 // Fichier autonome, pas d'imports du projet
 // TODO: Implémenter si l'endpoint PSN existe
 
-import { PSNClient } from './client';
+import { PSNClient } from './client.js';
 
 export interface PSNMessage {
   id: string;

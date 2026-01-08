@@ -1,9 +1,9 @@
 // Gestion des notes
 // Fichier autonome, pas d'imports du projet
 
-import { PSNClient } from './client';
-import { getLogbook, getStudent } from './logbook';
-import type { PSNGrade } from './types';
+import { PSNClient } from './client.js';
+import { getLogbook, getStudent } from './logbook.js';
+import type { PSNGrade } from './types.js';
 
 export async function getGrades(client: PSNClient): Promise<PSNGrade[]> {
   const logbook = await getLogbook(client);

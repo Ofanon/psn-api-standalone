@@ -4,7 +4,7 @@
 import got from 'got';
 import { CookieJar } from 'tough-cookie';
 import * as cheerio from 'cheerio';
-import type { Cookie } from './types';
+import type { Cookie } from './types.js';
 
 export interface AuthParams {
   username: string;

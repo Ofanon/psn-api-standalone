@@ -1,8 +1,8 @@
 // Récupération du logbook PSN
 // Fichier autonome, pas d'imports du projet
 
-import { PSNClient } from './client';
-import type { PSNLogbookResponse } from './types';
+import { PSNClient } from './client.js';
+import type { PSNLogbookResponse } from './types.js';
 
 export async function getLogbook(client: PSNClient): Promise<PSNLogbookResponse> {
   return client.request<PSNLogbookResponse>('GET', '/logbook');

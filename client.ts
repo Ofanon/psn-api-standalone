@@ -2,7 +2,7 @@
 // Fichier autonome, pas d'imports du projet
 
 import got from 'got';
-import type { Cookie } from './types';
+import type { Cookie } from './types.js';
 
 export class PSNClient {
   private cookieHeader: string;

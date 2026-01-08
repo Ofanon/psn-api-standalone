@@ -4,13 +4,13 @@
 import { select, input, password as askPassword, confirm } from '@inquirer/prompts';
 import fs from 'node:fs';
 import path from 'node:path';
-import { authenticatePSN } from './auth';
-import { PSNClient } from './client';
-import { getLogbook, getStudentName } from './logbook';
-import { getGrades, printGrades } from './grades';
-import { getHomework, printHomework } from './homework';
-import { getMessages, printMessages } from './messages';
-import type { Cookie } from './types';
+import { authenticatePSN } from './auth.js';
+import { PSNClient } from './client.js';
+import { getLogbook, getStudentName } from './logbook.js';
+import { getGrades, printGrades } from './grades.js';
+import { getHomework, printHomework } from './homework.js';
+import { getMessages, printMessages } from './messages.js';
+import type { Cookie } from './types.js';
 
 const COOKIES_PATH = path.join(process.cwd(), '.psn-cookies.json');
 

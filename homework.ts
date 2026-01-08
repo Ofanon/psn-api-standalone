@@ -1,9 +1,9 @@
 // Gestion des devoirs
 // Fichier autonome, pas d'imports du projet
 
-import { PSNClient } from './client';
-import { getLogbook, getStudent } from './logbook';
-import type { PSNHomework } from './types';
+import { PSNClient } from './client.js';
+import { getLogbook, getStudent } from './logbook.js';
+import type { PSNHomework } from './types.js';
 
 export async function getHomework(client: PSNClient): Promise<PSNHomework[]> {
   const logbook = await getLogbook(client);

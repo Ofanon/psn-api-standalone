@@ -2,12 +2,12 @@
 // Fichier autonome pour déploiement sur Render, Railway, Fly.io, etc.
 
 import express, { Request, Response } from 'express';
-import { authenticatePSN } from './auth';
-import { PSNClient } from './client';
-import { getGrades } from './grades';
-import { getHomework } from './homework';
-import { getLogbook, getStudentName } from './logbook';
-import type { Cookie } from './types';
+import { authenticatePSN } from './auth.js';
+import { PSNClient } from './client.js';
+import { getGrades } from './grades.js';
+import { getHomework } from './homework.js';
+import { getLogbook, getStudentName } from './logbook.js';
+import type { Cookie } from './types.js';
 
 const app = express();
 app.use(express.json());
