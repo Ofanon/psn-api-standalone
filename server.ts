@@ -10,6 +10,21 @@ import { getLogbook, getStudentName } from './logbook.js';
 import type { Cookie } from './types.js';
 
 const app = express();
+
+// CORS middleware - Allow all origins
+app.use((req: Request, res: Response, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
+
 app.use(express.json());
 
 // In-memory session store (pour démo - utiliser Redis en prod)
