@@ -1,0 +1,10 @@
+node_modules/
+.psn-cookies.json
+*.log
+.env
+.DS_Store
+dist/
+build/
+.vercel
+.railway
+fly.toml.local
