@@ -32,7 +32,7 @@ export async function authenticatePSN(params: AuthParams): Promise<{ cookies: Co
   // Already authenticated?
   if (entry.headers['content-type']?.includes('application/json')) {
     const cookies = await cookieJar.getCookies(psnUrl);
-    return { cookies: cookies.map(c => ({ name: c.key, value: c.value, domain: c.domain || '.monlycee.net' })) };
+    return { cookies: cookies.map((c: any) => ({ name: c.key, value: c.value, domain: c.domain || '.monlycee.net' })) };
   }
 
   // 2) Parse login form
@@ -61,7 +61,7 @@ export async function authenticatePSN(params: AuthParams): Promise<{ cookies: Co
 
   // 4) Validate session
   const cookiesAfter = await cookieJar.getCookies(psnUrl);
-  const cookieHeader = cookiesAfter.map(c => `${c.key}=${c.value}`).join('; ');
+  const cookieHeader = cookiesAfter.map((c: any) => `${c.key}=${c.value}`).join('; ');
   
   const jsonResp = await got.get(`${psnUrl}/logbook`, {
     headers: { 
@@ -77,5 +77,5 @@ export async function authenticatePSN(params: AuthParams): Promise<{ cookies: Co
   }
 
   const finalCookies = await cookieJar.getCookies(psnUrl);
-  return { cookies: finalCookies.map(c => ({ name: c.key, value: c.value, domain: c.domain || '.monlycee.net' })) };
+  return { cookies: finalCookies.map((c: any) => ({ name: c.key, value: c.value, domain: c.domain || '.monlycee.net' })) };
 }
