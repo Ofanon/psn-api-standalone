@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Dashboard PSN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .student-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .student-name {
+            color: #333;
+            font-weight: 600;
+            font-size: 1.3em;
+        }
+
+        /* Login Form */
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 450px;
+            margin: 100px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-container h2 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .tab:hover {
+            background: #e0e0e0;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Notes */
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .grade-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .grade-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .grade-card .subject {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .grade-card .grade {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .grade-card .details {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .grade-card .date {
+            color: #999;
+            font-size: 0.85em;
+            margin-top: 8px;
+        }
+
+        /* Devoirs */
+        .homework-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .homework-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #667eea;
+        }
+
+        .homework-card .subject {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .homework-card .title {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .homework-card .description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .homework-card .due-date {
+            color: #e53e3e;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        /* Logbook */
+        .logbook-data {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .logbook-data pre {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: white;
+            font-size: 1.3em;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+            font-size: 1.1em;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state .emoji {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .grades-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+        <h2>🔐 Connexion PSN</h2>
+        
+        <div class="form-group">
+            <label for="apiUrl">URL de l'API:</label>
+            <input 
+                type="text" 
+                id="apiUrl" 
+                value="https://psn-api-standalone.onrender.com"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="username">Email:</label>
+            <input type="email" id="username" placeholder="ton.email@example.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe:</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <button class="btn btn-primary" id="loginBtn" onclick="login()">
+            Se connecter
+        </button>
+
+        <div id="loginError" class="error-message" style="display: none;"></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
+
+        <div class="header">
+            <h1>📚 Mon Espace PSN</h1>
+            <div class="student-info">
+                Bienvenue, <span class="student-name" id="studentName">Chargement...</span>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('grades')">📊 Notes</button>
+            <button class="tab" onclick="switchTab('homework')">✏️ Devoirs</button>
+            <button class="tab" onclick="switchTab('messages')">💬 Messages</button>
+            <button class="tab" onclick="switchTab('schedule')">📅 Emploi du temps</button>
+            <button class="tab" onclick="switchTab('logbook')">📖 Logbook</button>
+        </div>
+
+        <div id="gradesTab" class="tab-content active">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Chargement des notes...</div>
+            </div>
+        </div>
+
+        <div id="homeworkTab" class="tab-content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Chargement des devoirs...</div>
+            </div>
+        </div>
+
+        <div id="messagesTab" class="tab-content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Chargement des messages...</div>
+            </div>
+        </div>
+
+        <div id="scheduleTab" class="tab-content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Chargement de l'emploi du temps...</div>
+            </div>
+        </div>
+
+        <div id="logbookTab" class="tab-content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Chargement du logbook...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let apiUrl = 'https://psn-api-standalone.onrender.com';
+        let sessionId = null;
+
+        async function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            apiUrl = document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
+
+            const loginBtn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('loginError');
+
+            if (!username || !password) {
+                errorDiv.textContent = 'Veuillez entrer un email et un mot de passe';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = '⏳ Connexion...';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${apiUrl}/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Authentification échouée');
+                }
+
+                sessionId = data.sessionId;
+                
+                // Show dashboard
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+
+                // Load data
+                await loadAllData();
+
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Se connecter';
+            }
+        }
+
+        async function loadAllData() {
+            await Promise.all([
+                loadLogbook(),
+                loadGrades(),
+                loadHomework(),
+                loadMessages(),
+                loadSchedule()
+            ]);
+        }
+
+        async function loadLogbook() {
+            try {
+                const response = await fetch(`${apiUrl}/logbook`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('studentName').textContent = data.data.studentName || 'Étudiant';
+                    
+                    const logbookTab = document.getElementById('logbookTab');
+                    logbookTab.innerHTML = `
+                        <div class="logbook-data">
+                            <h3 style="color: #667eea; margin-bottom: 20px;">📖 Données complètes</h3>
+                            <pre>${JSON.stringify(data.data.logbook, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Logbook error:', error);
+            }
+        }
+
+        async function loadGrades() {
+            try {
+                const response = await fetch(`${apiUrl}/grades`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId })
+                });
+
+                const data = await response.json();
+                const gradesTab = document.getElementById('gradesTab');
+
+                if (data.success && data.data.grades && data.data.grades.length > 0) {
+                    const gradesHtml = data.data.grades.map(grade => `
+                        <div class="grade-card">
+                            <div class="subject">${grade.subject || grade.subjectId || 'Matière'}</div>
+                            <div class="grade">${grade.grade || 'N/A'}<span style="font-size: 0.5em; color: #999;">/${grade.scale || '20'}</span></div>
+                            <div class="details">
+                                ${grade.description || ''}
+                            </div>
+                            <div class="date">📅 ${grade.date || 'Date inconnue'}</div>
+                        </div>
+                    `).join('');
+
+                    gradesTab.innerHTML = `<div class="grades-grid">${gradesHtml}</div>`;
+                } else {
+                    gradesTab.innerHTML = `
+                        <div class="empty-state">
+                            <div class="emoji">📊</div>
+                            <div>Aucune note disponible pour le moment</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Grades error:', error);
+                document.getElementById('gradesTab').innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">⚠️</div>
+                        <div>Erreur lors du chargement des notes</div>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadHomework() {
+            try {
+                const response = await fetch(`${apiUrl}/homework`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId })
+                });
+
+                const data = await response.json();
+                const homeworkTab = document.getElementById('homeworkTab');
+
+                if (data.success && data.data.homework && data.data.homework.length > 0) {
+                    const homeworkHtml = data.data.homework.map(hw => {
+                        const subject = typeof hw.subject === 'string' ? hw.subject : (hw.subject?.name || hw.subjectId || 'Matière');
+                        return `
+                            <div class="homework-card">
+                                <div class="subject">${subject}</div>
+                                <div class="title">${hw.done ? '✅' : '⏳'} ${hw.description || 'Devoir'}</div>
+                                <div class="description">${hw.details || ''}</div>
+                                <div class="due-date">📅 Pour le : ${hw.date || 'Date non précisée'}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    homeworkTab.innerHTML = `<div class="homework-list">${homeworkHtml}</div>`;
+                } else {
+                    homeworkTab.innerHTML = `
+                        <div class="empty-state">
+                            <div class="emoji">✏️</div>
+                            <div>Aucun devoir à rendre</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Homework error:', error);
+                document.getElementById('homeworkTab').innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">⚠️</div>
+                        <div>Erreur lors du chargement des devoirs</div>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadMessages() {
+            try {
+                const response = await fetch(`${apiUrl}/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId })
+                });
+
+                const data = await response.json();
+                const messagesTab = document.getElementById('messagesTab');
+
+                if (data.success && data.data.messages && data.data.messages.length > 0) {
+                    const messagesHtml = data.data.messages.map(msg => `
+                        <div class="homework-card" style="border-left-color: ${msg.read ? '#999' : '#667eea'};">
+                            <div class="subject">${msg.read ? '📭' : '📬'} ${msg.from || 'Expéditeur inconnu'}</div>
+                            <div class="title">${msg.subject || 'Sans objet'}</div>
+                            <div class="description">${msg.content || msg.preview || 'Pas de contenu'}</div>
+                            <div class="due-date">📅 ${msg.date || 'Date inconnue'}</div>
+                        </div>
+                    `).join('');
+
+                    messagesTab.innerHTML = `<div class="homework-list">${messagesHtml}</div>`;
+                } else {
+                    messagesTab.innerHTML = `
+                        <div class="empty-state">
+                            <div class="emoji">💬</div>
+                            <div>Aucun message</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Messages error:', error);
+                document.getElementById('messagesTab').innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">⚠️</div>
+                        <div>Erreur lors du chargement des messages</div>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadSchedule() {
+            try {
+                const response = await fetch(`${apiUrl}/schedule`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId })
+                });
+
+                const data = await response.json();
+                const scheduleTab = document.getElementById('scheduleTab');
+
+                if (data.success && data.data.schedule && data.data.schedule.length > 0) {
+                    // Grouper par date
+                    const grouped = data.data.schedule.reduce((acc, slot) => {
+                        const date = slot.date || 'Date inconnue';
+                        if (!acc[date]) acc[date] = [];
+                        acc[date].push(slot);
+                        return acc;
+                    }, {});
+
+                    const scheduleHtml = Object.entries(grouped).map(([date, slots]) => `
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #667eea; margin-bottom: 15px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                📅 ${date}
+                            </h3>
+                            <div class="homework-list">
+                                ${slots.map(slot => `
+                                    <div class="homework-card" style="border-left-color: #10b981;">
+                                        <div class="subject">${slot.subject || 'Cours'}</div>
+                                        <div class="description">
+                                            🕐 ${slot.startTime || '?'} - ${slot.endTime || '?'}
+                                            ${slot.teacher ? `<br>👨‍🏫 ${slot.teacher}` : ''}
+                                            ${slot.room ? `<br>🚪 ${slot.room}` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('');
+
+                    scheduleTab.innerHTML = scheduleHtml;
+                } else {
+                    scheduleTab.innerHTML = `
+                        <div class="empty-state">
+                            <div class="emoji">📅</div>
+                            <div>Aucun cours à afficher</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Schedule error:', error);
+                document.getElementById('scheduleTab').innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">⚠️</div>
+                        <div>Erreur lors du chargement de l'emploi du temps</div>
+                    </div>
+                `;
+            }
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function logout() {
+            sessionId = null;
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('loginBtn').disabled = false;
+            document.getElementById('loginBtn').textContent = 'Se connecter';
+        }
+
+        // Allow Enter key to login
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>

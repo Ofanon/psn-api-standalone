@@ -7,6 +7,8 @@ import { PSNClient } from './client.js';
 import { getGrades } from './grades.js';
 import { getHomework } from './homework.js';
 import { getLogbook, getStudentName } from './logbook.js';
+import { getMessages } from './messages.js';
+import { getSchedule } from './schedule.js';
 import type { Cookie } from './types.js';
 
 const app = express();
@@ -156,6 +158,52 @@ app.post('/homework', async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error('Homework error:', error);
+    res.status(500).json({ error: error?.message || 'Erreur serveur' });
+  }
+});
+
+// Messages
+app.post('/messages', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.body;
+    const session = sessions.get(sessionId);
+    
+    if (!session) {
+      return res.status(401).json({ error: 'Session invalide ou expirée' });
+    }
+
+    const client = new PSNClient(session.cookies);
+    const messages = await getMessages(client);
+    
+    res.json({
+      success: true,
+      data: { messages }
+    });
+  } catch (error: any) {
+    console.error('Messages error:', error);
+    res.status(500).json({ error: error?.message || 'Erreur serveur' });
+  }
+});
+
+// Emploi du temps
+app.post('/schedule', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.body;
+    const session = sessions.get(sessionId);
+    
+    if (!session) {
+      return res.status(401).json({ error: 'Session invalide ou expirée' });
+    }
+
+    const client = new PSNClient(session.cookies);
+    const schedule = await getSchedule(client);
+    
+    res.json({
+      success: true,
+      data: { schedule }
+    });
+  } catch (error: any) {
+    console.error('Schedule error:', error);
     res.status(500).json({ error: error?.message || 'Erreur serveur' });
   }
 });
