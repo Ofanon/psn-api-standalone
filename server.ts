@@ -28,6 +28,7 @@ app.use((req: Request, res: Response, next) => {
 });
 
 app.use(express.json());
+app.use(express.static('.'));
 
 // In-memory session store (pour démo - utiliser Redis en prod)
 const sessions = new Map<string, { cookies: Cookie[]; expiresAt: number }>();
@@ -62,13 +63,16 @@ app.get('/', (req: Request, res: Response) => {
 // Authentification
 app.post('/auth', async (req: Request, res: Response) => {
   try {
+    console.log('[AUTH] Request received:', { username: req.body.username });
     const { username, password } = req.body;
     
     if (!username || !password) {
       return res.status(400).json({ error: 'Username et password requis' });
     }
 
+    console.log('[AUTH] Authenticating with PSN...');
     const { cookies } = await authenticatePSN({ username, password });
+    console.log('[AUTH] Authentication successful, got cookies:', cookies.length);
     
     // Générer un sessionId
     const sessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
@@ -93,6 +97,7 @@ app.post('/auth', async (req: Request, res: Response) => {
 // Logbook
 app.post('/logbook', async (req: Request, res: Response) => {
   try {
+    console.log('[LOGBOOK] Request received');
     const { sessionId } = req.body;
     const session = sessions.get(sessionId);
     
@@ -100,7 +105,9 @@ app.post('/logbook', async (req: Request, res: Response) => {
       return res.status(401).json({ error: 'Session invalide ou expirée' });
     }
 
+    console.log('[LOGBOOK] Session found, creating client...');
     const client = new PSNClient(session.cookies);
+    console.log('[LOGBOOK] Calling getLogbook...');
     const logbook = await getLogbook(client);
     
     res.json({

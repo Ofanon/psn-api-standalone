@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test API</title>
+  <style>
+    body { font-family: monospace; margin: 20px; }
+    button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    .result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #f5f5f5; }
+    pre { overflow-x: auto; max-height: 500px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <h1>PSN API Test</h1>
+  <button onclick="testAuth()">1. Auth</button>
+  <button onclick="testSchedule()">2. Schedule</button>
+  <button onclick="testLogbook()">3. Logbook</button>
+  <button onclick="testGrades()">4. Grades</button>
+  <button onclick="testHomework()">5. Homework</button>
+  
+  <div id="result" class="result">Results will appear here...</div>
+
+  <script>
+    let sessionId = null;
+
+    async function testAuth() {
+      try {
+        const res = await fetch('http://localhost:3000/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: 'oscar.fanon',
+            password: 'iez(AWBs&2345678'
+          })
+        });
+        const data = await res.json();
+        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        if (data.sessionId) {
+          sessionId = data.sessionId;
+          alert('Auth successful! Session: ' + sessionId);
+        }
+      } catch (e) {
+        document.getElementById('result').innerHTML = '<pre style="color:red">' + e.message + '</pre>';
+      }
+    }
+
+    async function testSchedule() {
+      if (!sessionId) {
+        alert('Please test auth first');
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:3000/schedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId })
+        });
+        const data = await res.json();
+        if (data.data && data.data.schedule) {
+          const count = data.data.schedule.length;
+          document.getElementById('result').innerHTML = 
+            '<p style="color:green">Schedule found: ' + count + ' courses</p>' +
+            '<pre>' + JSON.stringify(data.data.schedule, null, 2) + '</pre>';
+        } else {
+          document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        }
+      } catch (e) {
+        document.getElementById('result').innerHTML = '<pre style="color:red">' + e.message + '</pre>';
+      }
+    }
+
+    async function testLogbook() {
+      if (!sessionId) {
+        alert('Please test auth first');
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:3000/logbook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId })
+        });
+        const data = await res.json();
+        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2).substring(0, 2000) + '...</pre>';
+      } catch (e) {
+        document.getElementById('result').innerHTML = '<pre style="color:red">' + e.message + '</pre>';
+      }
+    }
+
+    async function testGrades() {
+      if (!sessionId) {
+        alert('Please test auth first');
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:3000/grades', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId })
+        });
+        const data = await res.json();
+        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2).substring(0, 2000) + '...</pre>';
+      } catch (e) {
+        document.getElementById('result').innerHTML = '<pre style="color:red">' + e.message + '</pre>';
+      }
+    }
+
+    async function testHomework() {
+      if (!sessionId) {
+        alert('Please test auth first');
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:3000/homework', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId })
+        });
+        const data = await res.json();
+        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2).substring(0, 2000) + '...</pre>';
+      } catch (e) {
+        document.getElementById('result').innerHTML = '<pre style="color:red">' + e.message + '</pre>';
+      }
+    }
+
+    // Auto auth
+    testAuth();
+  </script>
+</body>
+</html>
